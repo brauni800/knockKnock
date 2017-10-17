@@ -46,18 +46,35 @@ public class KnockKnockClient {
     	proxy.connect();
     	
     	BufferedReader stdIn;
-    	String fromUser;
+    	String[] fromUser;
     	
     	do {
     		stdIn = new BufferedReader(new InputStreamReader(System.in));
-    		fromUser = stdIn.readLine();
-    		switch (fromUser) {
-    		case "Registrar":
-    		case "REGISTRAR":
-    		case "registrar":
-    			proxy.register(KnockKnockClient.IP);
-    			break;
+    		fromUser = parserFromUser(stdIn.readLine());
+    		if (fromUser.length == 1 || fromUser.length == 2) {
+    			cases(proxy, fromUser);
+    		} else {
+    			System.out.println("Error en los datos que solicitó el cliente");
     		}
     	} while (proxy.getResponseFromServer());
+    }
+    
+    private static String[] parserFromUser(String fromUser) {
+    	return fromUser.split(" ");
+    }
+    
+    private static void cases(ClientProxy proxy, String[] fromUser) {
+    	switch (fromUser[0]) {
+		case "Registrar":
+		case "REGISTRAR":
+		case "registrar":
+			proxy.register(KnockKnockClient.IP);
+			break;
+		case "Votar":
+		case "VOTAR":
+		case "votar":
+			proxy.vote(fromUser[1]);
+			break;
+		}
     }
 }
