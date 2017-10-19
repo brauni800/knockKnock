@@ -26,6 +26,20 @@ public class ClientProxy {
 		this.portNumber = portNumber;
 	}
 	
+	public String[][] getDataFromServer() {
+		String[] dataJSON = this.fromServer.split(","), peersDataJSON = null, correctPeers = null;
+		String[][] result = new String[dataJSON.length][2];
+		
+		for (int i = 0; i < dataJSON.length; i++) {
+			peersDataJSON = dataJSON[i].split(":"); 
+			for (int j = 0; j < peersDataJSON.length; j++) {
+				correctPeers = peersDataJSON[j].split("\"");
+				result[i][j] = correctPeers[1];
+			}
+		}
+		return result;
+	}
+
 	public boolean getResponseFromServer() throws IOException {
 		return (this.fromServer = this.in.readLine()) != null;
 	}

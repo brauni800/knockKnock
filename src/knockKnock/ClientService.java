@@ -32,7 +32,7 @@ package knockKnock;
 
 import java.io.*;
 
-public class KnockKnockClient {
+public class ClientService {
 	private static final String IP = "192.168.0.1";
 	
     public static void main(String[] args) throws IOException {
@@ -45,18 +45,17 @@ public class KnockKnockClient {
     	ClientProxy proxy = new ClientProxy(args[0], Integer.parseInt(args[1]));
     	proxy.connect();
     	
-    	BufferedReader stdIn;
+    	BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
     	String[] fromUser;
     	
-    	do {
-    		stdIn = new BufferedReader(new InputStreamReader(System.in));
+    	while (proxy.getResponseFromServer()) {
     		fromUser = parserFromUser(stdIn.readLine());
     		if (fromUser.length == 1 || fromUser.length == 2) {
     			cases(proxy, fromUser);
     		} else {
     			System.out.println("Error en los datos que solicitó el cliente");
     		}
-    	} while (proxy.getResponseFromServer());
+    	}
     }
     
     private static String[] parserFromUser(String fromUser) {
@@ -68,12 +67,15 @@ public class KnockKnockClient {
 		case "Registrar":
 		case "REGISTRAR":
 		case "registrar":
-			proxy.register(KnockKnockClient.IP);
+			proxy.register(ClientService.IP);
 			break;
 		case "Votar":
 		case "VOTAR":
 		case "votar":
 			proxy.vote(fromUser[1]);
+			break;
+		default:
+			System.out.println("Servicio incorrecto");
 			break;
 		}
     }
