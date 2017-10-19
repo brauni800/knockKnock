@@ -1,10 +1,10 @@
-package knockKnock;
+package server;
 
 import java.io.IOException;
 
-public class clientMain {
+public class serverMain {
 
 	public static void main(String[] args) throws IOException {
-		ClientService.main(new String[] {null, "4444"});
+		KnockKnockServer.main(new String[]{"4444"});
 	}
 }

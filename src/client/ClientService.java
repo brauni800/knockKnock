@@ -1,4 +1,4 @@
-package knockKnock;
+package client;
 /*
  * Copyright (c) 1995, 2013, Oracle and/or its affiliates. All rights reserved.
  *
@@ -46,37 +46,10 @@ public class ClientService {
     	proxy.connect();
     	
     	BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
-    	String[] fromUser;
+    	ClientProtocol protocol = new ClientProtocol(proxy, ClientService.IP);
     	
     	while (proxy.getResponseFromServer()) {
-    		fromUser = parserFromUser(stdIn.readLine());
-    		if (fromUser.length == 1 || fromUser.length == 2) {
-    			cases(proxy, fromUser);
-    		} else {
-    			System.out.println("Error en los datos que solicitó el cliente");
-    		}
+    		protocol.processInput(stdIn.readLine());
     	}
-    }
-    
-    private static String[] parserFromUser(String fromUser) {
-    	return fromUser.split(" ");
-    }
-    
-    private static void cases(ClientProxy proxy, String[] fromUser) {
-    	switch (fromUser[0]) {
-		case "Registrar":
-		case "REGISTRAR":
-		case "registrar":
-			proxy.register(ClientService.IP);
-			break;
-		case "Votar":
-		case "VOTAR":
-		case "votar":
-			proxy.vote(fromUser[1]);
-			break;
-		default:
-			System.out.println("Servicio incorrecto");
-			break;
-		}
     }
 }
