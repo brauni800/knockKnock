@@ -7,15 +7,16 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class BrokerClientProxy {
+public class BrokerProxy {
 
+	private String fromServer;
 	private int portNumber;
-	ServerSocket clientsSocket;
-	Socket socket;
-	PrintWriter out;
-	BufferedReader in;
+	private ServerSocket clientsSocket;
+	private Socket socket;
+	private PrintWriter out;
+	private BufferedReader in;
 	
-	public BrokerClientProxy(int portNumber) {
+	public BrokerProxy(int portNumber) {
 		this.portNumber = portNumber;
 	}
 	
@@ -30,5 +31,13 @@ public class BrokerClientProxy {
                     + this.portNumber + " or listening for a connection");
             System.out.println(e.getMessage());
 		}
+	}
+	
+	public boolean getResponseFromServer() throws IOException {
+		return (this.fromServer = this.in.readLine()) != null;
+	}
+	
+	public void setTheOutput(String output) {
+		this.out.println(output);
 	}
 }

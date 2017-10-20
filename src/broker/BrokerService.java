@@ -13,21 +13,25 @@ import server.KnockKnockProtocol;
 
 public class BrokerService {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		if (args.length != 2) {
             System.err.println("Usage: java BrokerServer <client port number> <server port number>");
             System.exit(1);
         }
 
-		BrokerClientProxy clientProxy = new BrokerClientProxy(Integer.parseInt(args[0]));
+		BrokerProxy clientProxy = new BrokerProxy(Integer.parseInt(args[0]));
 		clientProxy.connect();
 		BrokerProtocol clientProtocol = new BrokerProtocol(clientProxy);
+		clientProxy.setTheOutput(clientProtocol.processInput(null));
 		
 		BrokerServerProxy serverProxy = new BrokerServerProxy(Integer.parseInt(args[1]));
 		serverProxy.connect();
 		BrokerProtocol serverProtocol = new BrokerProtocol(serverProxy);
 		
 		
+		while(clientProxy.getResponseFromServer()) {
+			
+		}
 		
 //		int clientsPortNumber = Integer.parseInt(args[0]), serversPorNumber = Integer.parseInt(args[1]);
 //		String fromClient, fromServer, inputLine, outputLine;

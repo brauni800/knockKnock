@@ -2,10 +2,10 @@ package broker;
 
 public class BrokerProtocol {
 
-	private BrokerClientProxy clientProxy;
+	private BrokerProxy clientProxy;
 	private BrokerServerProxy serverProxy;
 	
-	public BrokerProtocol(BrokerClientProxy clientProxy) {
+	public BrokerProtocol(BrokerProxy clientProxy) {
 		this.clientProxy = clientProxy;
 	}
 	
@@ -15,7 +15,14 @@ public class BrokerProtocol {
 
 	public String processInput(String input) {
 		String theOutput = null;
-		
+		if (!input.equals(null)) {
+			switch(input) {
+			case "":
+				break;
+			}
+		} else {
+			
+		}
 		return theOutput;
 	}
 	private void protocol() {
