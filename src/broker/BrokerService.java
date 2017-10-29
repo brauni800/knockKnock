@@ -1,15 +1,8 @@
 package broker;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.ServerSocket;
-import java.net.Socket;
 
 import org.json.simple.JSONObject;
-
-import server.KnockKnockProtocol;
 
 public class BrokerService {
 
@@ -24,13 +17,15 @@ public class BrokerService {
 		BrokerProtocol clientProtocol = new BrokerProtocol(clientProxy);
 		clientProxy.setTheOutput(clientProtocol.processInput(null));
 		
-		BrokerServerProxy serverProxy = new BrokerServerProxy(Integer.parseInt(args[1]));
+		BrokerProxy serverProxy = new BrokerProxy(Integer.parseInt(args[1]));
 		serverProxy.connect();
 		BrokerProtocol serverProtocol = new BrokerProtocol(serverProxy);
+		serverProxy.setTheOutput(serverProtocol.processInput(null));
 		
 		
-		while(clientProxy.getResponseFromServer()) {
-			
+		while(clientProxy.getResponseFromServer() && serverProxy.getResponseFromServer()) {
+			JSONObject clientOutput = clientProtocol.processInput(clientProxy.getDataFromServer());
+			JSONObject serverOutput = serverProtocol.processInput(serverProxy.getDataFromServer());
 		}
 		
 //		int clientsPortNumber = Integer.parseInt(args[0]), serversPorNumber = Integer.parseInt(args[1]);
@@ -86,36 +81,6 @@ public class BrokerService {
 //            System.out.println("Exception caught when trying to listen on port "
 //                + portNumber + " or listening for a connection");
 //            System.out.println(e.getMessage());
-//        }
-	}
-
-	private static void clientExecute(PrintWriter out, BufferedReader in) {
-		String fromServer;
-        String fromUser;
-        
-        //{"Servicio":"Registrar","ip":"192.158.1.0"}
-        JSONObject json = new JSONObject();
-        json.put("Servicio", "Registrar");
-        json.put("ip", "192.158.1.0");
-        //System.out.println(json);
-        out.println(json);
-	}
-
-	private static void serverExecute(PrintWriter out, BufferedReader in) throws IOException {
-		String inputLine, outputLine;
-        
-        // Initiate conversation with client
-        KnockKnockProtocol kkp = new KnockKnockProtocol();
-        inputLine = in.readLine();
-        System.out.println(inputLine);
-        outputLine = kkp.processInput(inputLine);
-        out.println(outputLine);
-
-//        while ((inputLine = in.readLine()) != null) {
-//            outputLine = kkp.processInput(inputLine);
-//            out.println(outputLine);
-//            if (outputLine.equals("Bye."))
-//                break;
 //        }
 	}
 }

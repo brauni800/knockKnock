@@ -1,31 +1,42 @@
 package broker;
 
+import org.json.simple.JSONObject;
+
+import model.Archivos;
+
 public class BrokerProtocol {
 
-	private BrokerProxy clientProxy;
-	private BrokerServerProxy serverProxy;
+	private BrokerProxy proxy;
 	
-	public BrokerProtocol(BrokerProxy clientProxy) {
-		this.clientProxy = clientProxy;
-	}
-	
-	public BrokerProtocol(BrokerServerProxy serverProxy) {
-		this.serverProxy = serverProxy;
+	public BrokerProtocol(BrokerProxy serverProxy) {
+		this.proxy = serverProxy;
 	}
 
-	public String processInput(String input) {
-		String theOutput = null;
+	public JSONObject processInput(String[][] input) {
+		JSONObject theOutput = null;
 		if (!input.equals(null)) {
-			switch(input) {
-			case "":
-				break;
-			}
+			theOutput = protocol(input);
 		} else {
-			
+			String[] buttonNames = new Archivos("buttons").getButtonsNames();
+			String[][] jsonElements = new String[buttonNames.length][2];
+			for (int i = 0; i < buttonNames.length; i++) {
+				jsonElements[i][0] = buttonNames[i];
+				jsonElements[i][1] = "0";
+			}
+			theOutput = this.proxy.results(jsonElements);
 		}
 		return theOutput;
 	}
-	private void protocol() {
-		
+
+	private JSONObject protocol(String[][] input) {
+		JSONObject theOutput = null;
+		for (int i = 0; i < input.length; i++) {
+			for (int j = 0; j < input[i].length; j++) {
+				if (input[i][0].equals("")) {
+					
+				}
+			}
+		}
+		return theOutput;
 	}
 }

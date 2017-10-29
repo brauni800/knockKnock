@@ -1,4 +1,4 @@
-package broker;
+package server;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,20 +9,25 @@ import java.net.Socket;
 
 import org.json.simple.JSONObject;
 
-public class BrokerProxy {
+import model.Archivos;
 
+public class ServerProxy {
+
+	public static final String VOTAR = "VOTAR";
+	private static final String BUTTONS = "buttons";
+	
 	private String fromServer;
 	private int portNumber;
-	private ServerSocket clientsSocket;
+	private ServerSocket serverSocket;
 	private Socket socket;
 	private PrintWriter out;
 	private BufferedReader in;
 	private JSONObject json;
 	
-	public BrokerProxy(int portNumber) {
+	public ServerProxy(int portNumber) {
 		this.portNumber = portNumber;
 	}
-	
+
 	public String[][] getDataFromServer() {
 		String[] dataJSON = this.fromServer.split(","), peersDataJSON = null, correctPeers = null;
 		String[][] result = new String[dataJSON.length][2];
@@ -37,10 +42,32 @@ public class BrokerProxy {
 		return result;
 	}
 
+	public boolean getResponseFromServer() throws IOException {
+		return (this.fromServer = this.in.readLine()) != null;
+	}
+
+	public void vote(String voto) {
+		new Archivos(voto).insertarFecha();
+	}
+
+	@SuppressWarnings("unchecked")
+	public void generateJSON() {
+		String[] buttonNames = new Archivos(BUTTONS).getButtonsNames();
+		this.json = new JSONObject();
+		for (int i = 0; i < buttonNames.length; i++) {
+			int numVotos = (int) new Archivos(buttonNames[i]).contarLineas();
+			this.json.put(buttonNames[i], numVotos);
+		}
+	}
+
+	public void setTheOutput() {
+		this.out.println(this.json);
+	}
+	
 	public void connect() {
 		try {
-			this.clientsSocket = new ServerSocket(this.portNumber);
-			this.socket = this.clientsSocket.accept();
+			this.serverSocket = new ServerSocket(this.portNumber);
+			this.socket = this.serverSocket.accept();
 			this.out = new PrintWriter(this.socket.getOutputStream(), true);
 			this.in = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
 		} catch (IOException e) {
@@ -48,24 +75,5 @@ public class BrokerProxy {
                     + this.portNumber + " or listening for a connection");
             System.out.println(e.getMessage());
 		}
-	}
-	
-	public boolean getResponseFromServer() throws IOException {
-		return (this.fromServer = this.in.readLine()) != null;
-	}
-	
-	public void setTheOutput(JSONObject output) {
-		this.out.println(output);
-	}
-	
-	@SuppressWarnings("unchecked")
-	public JSONObject results(String[][] results) {
-		this.json = new JSONObject();
-		for (int i = 0; i < results.length; i++) {
-			for (int j = 0; j < results[i].length; j++) {
-				this.json.put(results[i][0], results[i][1]);
-			}
-		}
-		return this.json;
 	}
 }
