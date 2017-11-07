@@ -11,7 +11,7 @@ import org.json.simple.JSONObject;
 
 public class BrokerProxy {
 
-	private String fromServer,hostName;
+	private String fromClient,fromServer,hostName;
 	private int portNumberAsAClient,portNumberAsAServer;
 	private ServerSocket clientsSocket;
 	private Socket socketAsAClient,socketAsAServer;
@@ -64,7 +64,7 @@ public class BrokerProxy {
 		return (this.fromServer = this.inFromServer.readLine()) != null;
 	}
 	public boolean getResponseFromClient() throws IOException {
-		return (this.fromServer = this.inFromClient.readLine()) != null;
+		return (this.fromClient = this.inFromClient.readLine()) != null;
 	}
 	
 	public void setTheOutputToServer(JSONObject output) {
@@ -72,6 +72,12 @@ public class BrokerProxy {
 	}
 	public void setTheOutputToClient(JSONObject output) {
 		this.outToClient.println(output);
+	}
+	public String getInputValueFromServer() throws IOException {
+		return this.fromServer = this.inFromServer.readLine();
+	}
+	public String getInputValueFromClient() throws IOException {
+		return this.fromClient = this.inFromClient.readLine();
 	}
 	
 	@SuppressWarnings("unchecked")

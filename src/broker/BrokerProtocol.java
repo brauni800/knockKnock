@@ -39,4 +39,10 @@ public class BrokerProtocol {
 		}
 		return theOutput;
 	}
+	public void registerServices(String services) {
+		
+	}
+	public void registerClients(String clients) {
+		
+	}
 }
