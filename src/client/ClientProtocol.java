@@ -13,7 +13,7 @@ public class ClientProtocol {
 	
 	public void processInput(String input) {
 		this.fromUser = parserFromUser(input);
-		if (this.fromUser.length == 1 || this.fromUser.length == 2) {
+		if (this.fromUser.length == 2) {
 			protocol(this.fromUser);
 		} else {
 			System.out.println("Error en los datos que solicita el cliente");
@@ -26,15 +26,10 @@ public class ClientProtocol {
 	
 	private void protocol(String[] fromUser) {
     	switch (fromUser[0]) {
-		case "Registrar":
-		case "REGISTRAR":
-		case "registrar":
-			this.proxy.register(this.ip);
-			break;
 		case "Votar":
 		case "VOTAR":
 		case "votar":
-			this.proxy.vote(fromUser[1]);
+			this.proxy.vote(fromUser[1], this.ip);
 			break;
 		default:
 			System.out.println("Servicio incorrecto");

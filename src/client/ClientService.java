@@ -45,8 +45,10 @@ public class ClientService {
     	ClientProxy proxy = new ClientProxy(args[0], Integer.parseInt(args[1]));
     	proxy.connect();
     	
+    	proxy.register(IP);
+    	
     	BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
-    	ClientProtocol protocol = new ClientProtocol(proxy, ClientService.IP);
+    	ClientProtocol protocol = new ClientProtocol(proxy, IP);
     	
     	while (proxy.getResponseFromServer()) {
     		protocol.processInput(stdIn.readLine());

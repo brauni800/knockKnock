@@ -9,6 +9,7 @@ import java.net.Socket;
 
 import org.json.simple.JSONObject;
 
+import client.ClientProxy;
 import model.Archivos;
 
 public class ServerProxy {
@@ -63,8 +64,12 @@ public class ServerProxy {
 	public void setTheOutput() {
 		this.out.println(this.json);
 	}
+
+	@SuppressWarnings("unchecked")
 	public void sendServices() {
-		this.out.println(VOTAR);
+		this.json = new JSONObject();
+		this.json.put("SERVICIO", ClientProxy.VOTAR);
+        this.out.println(this.json);
 	}
 	
 	public void connect() {

@@ -53,9 +53,10 @@ public class ClientProxy {
 	}
 
 	@SuppressWarnings("unchecked")
-	public void vote(String voto) {
+	public void vote(String voto, String ip) {
 		this.json = new JSONObject();
 		this.json.put("SERVICIO", ClientProxy.VOTAR);
+		this.json.put("IP", ip);
 		this.json.put("VOTO", voto);
         this.out.println(this.json);
 	}
