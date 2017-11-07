@@ -13,6 +13,8 @@ public class ServerService {
 		
 		ServerProxy proxy = new ServerProxy(Integer.parseInt(args[0]));
 		proxy.connect();
+		//mandado de servicios al broker
+		proxy.sendServices();
 		
 		ServerProtocol protocol = new ServerProtocol(proxy);
 		

@@ -43,7 +43,7 @@ public class ServerProxy {
 	}
 
 	public boolean getResponseFromServer() throws IOException {
-		return (this.fromServer = this.in.readLine()) != null;
+		return (this.fromServer = this.in.readLine()) != null;//funciona?
 	}
 
 	public void vote(String voto) {
@@ -62,6 +62,9 @@ public class ServerProxy {
 
 	public void setTheOutput() {
 		this.out.println(this.json);
+	}
+	public void sendServices() {
+		this.out.println(VOTAR);
 	}
 	
 	public void connect() {

@@ -11,16 +11,18 @@ import org.json.simple.JSONObject;
 
 public class BrokerProxy {
 
-	private String fromServer;
-	private int portNumber;
+	private String fromServer,hostName;
+	private int portNumberAsAClient,portNumberAsAServer;
 	private ServerSocket clientsSocket;
-	private Socket socket;
-	private PrintWriter out;
-	private BufferedReader in;
+	private Socket socketAsAClient,socketAsAServer;
+	private PrintWriter outToClient,outToServer;
+	private BufferedReader inFromClient,inFromServer;
 	private JSONObject json;
 	
-	public BrokerProxy(int portNumber) {
-		this.portNumber = portNumber;
+	public BrokerProxy(String hostName,int portNumberAsAServer, int portNumberASaClient) {
+		this.portNumberAsAClient = portNumberASaClient;
+		this.portNumberAsAServer = portNumberAsAServer;
+		this.hostName = hostName;
 	}
 	
 	public String[][] getDataFromServer() {
@@ -39,23 +41,37 @@ public class BrokerProxy {
 
 	public void connect() {
 		try {
-			this.clientsSocket = new ServerSocket(this.portNumber);
-			this.socket = this.clientsSocket.accept();
-			this.out = new PrintWriter(this.socket.getOutputStream(), true);
-			this.in = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
+			this.socketAsAClient = new Socket(this.hostName,this.portNumberAsAClient);
+			this.outToServer = new PrintWriter(this.socketAsAClient.getOutputStream(), true);
+			this.inFromServer = new BufferedReader(new InputStreamReader(this.socketAsAClient.getInputStream()));
+			
+			this.clientsSocket = new ServerSocket(this.portNumberAsAServer);
+			this.socketAsAServer = this.clientsSocket.accept();
+			this.outToClient = new PrintWriter(this.socketAsAServer.getOutputStream(), true);
+			this.inFromClient = new BufferedReader(new InputStreamReader(this.socketAsAServer.getInputStream()));
+			
+			
+			
 		} catch (IOException e) {
             System.out.println("Exception caught when trying to listen on port "
-                    + this.portNumber + " or listening for a connection");
+                    + this.portNumberAsAClient + "or" + this.portNumberAsAServer + " or listening for a connection");
             System.out.println(e.getMessage());
 		}
 	}
+
 	
 	public boolean getResponseFromServer() throws IOException {
-		return (this.fromServer = this.in.readLine()) != null;
+		return (this.fromServer = this.inFromServer.readLine()) != null;
+	}
+	public boolean getResponseFromClient() throws IOException {
+		return (this.fromServer = this.inFromClient.readLine()) != null;
 	}
 	
-	public void setTheOutput(JSONObject output) {
-		this.out.println(output);
+	public void setTheOutputToServer(JSONObject output) {
+		this.outToServer.println(output);
+	}
+	public void setTheOutputToClient(JSONObject output) {
+		this.outToClient.println(output);
 	}
 	
 	@SuppressWarnings("unchecked")

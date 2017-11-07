@@ -7,26 +7,28 @@ import org.json.simple.JSONObject;
 public class BrokerService {
 
 	public static void main(String[] args) throws IOException {
-		if (args.length != 2) {
+		if (args.length != 3) {
             System.err.println("Usage: java BrokerServer <client port number> <server port number>");
             System.exit(1);
         }
 
-		BrokerProxy clientProxy = new BrokerProxy(Integer.parseInt(args[0]));
+		BrokerProxy clientProxy = new BrokerProxy(args[0],Integer.parseInt(args[1]),Integer.parseInt(args[2]));
 		clientProxy.connect();
 		BrokerProtocol clientProtocol = new BrokerProtocol(clientProxy);
-		clientProxy.setTheOutput(clientProtocol.processInput(null));
-		
-		BrokerProxy serverProxy = new BrokerProxy(Integer.parseInt(args[1]));
-		serverProxy.connect();
-		BrokerProtocol serverProtocol = new BrokerProtocol(serverProxy);
-		serverProxy.setTheOutput(serverProtocol.processInput(null));
 		
 		
-		while(clientProxy.getResponseFromServer() && serverProxy.getResponseFromServer()) {
-			JSONObject clientOutput = clientProtocol.processInput(clientProxy.getDataFromServer());
-			JSONObject serverOutput = serverProtocol.processInput(serverProxy.getDataFromServer());
-		}
+		clientProxy.setTheOutputToServer(clientProtocol.processInput(null));
+		
+//		BrokerProxy serverProxy = new BrokerProxy(Integer.parseInt(args[2]));
+//		serverProxy.connect();
+//		BrokerProtocol serverProtocol = new BrokerProtocol(serverProxy);
+//		serverProxy.setTheOutput(serverProtocol.processInput(null));
+		
+		
+//		while(clientProxy.getResponseFromServer() && serverProxy.getResponseFromServer()) {
+//			JSONObject clientOutput = clientProtocol.processInput(clientProxy.getDataFromServer());
+//			JSONObject serverOutput = serverProtocol.processInput(serverProxy.getDataFromServer());
+//		}
 		
 //		int clientsPortNumber = Integer.parseInt(args[0]), serversPorNumber = Integer.parseInt(args[1]);
 //		String fromClient, fromServer, inputLine, outputLine;
