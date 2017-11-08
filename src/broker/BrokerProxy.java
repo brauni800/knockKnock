@@ -38,27 +38,45 @@ public class BrokerProxy {
 		}
 		return result;
 	}
-
-	public void connect() {
+	
+	public String[][] getDataFromClient() {
+		String[] dataJSON = this.fromClient.split(","), peersDataJSON = null, correctPeers = null;
+		String[][] result = new String[dataJSON.length][2];
+		
+		for (int i = 0; i < dataJSON.length; i++) {
+			peersDataJSON = dataJSON[i].split(":"); 
+			for (int j = 0; j < peersDataJSON.length; j++) {
+				correctPeers = peersDataJSON[j].split("\"");
+				result[i][j] = correctPeers[1];
+			}
+		}
+		return result;
+	}
+	
+	public void connectServer() {
 		try {
-			this.socketAsAClient = new Socket(this.hostName,this.portNumberAsAClient);
-			this.outToServer = new PrintWriter(this.socketAsAClient.getOutputStream(), true);
-			this.inFromServer = new BufferedReader(new InputStreamReader(this.socketAsAClient.getInputStream()));
-			
 			this.clientsSocket = new ServerSocket(this.portNumberAsAServer);
 			this.socketAsAServer = this.clientsSocket.accept();
 			this.outToClient = new PrintWriter(this.socketAsAServer.getOutputStream(), true);
 			this.inFromClient = new BufferedReader(new InputStreamReader(this.socketAsAServer.getInputStream()));
-			
-			
-			
 		} catch (IOException e) {
             System.out.println("Exception caught when trying to listen on port "
                     + this.portNumberAsAClient + "or" + this.portNumberAsAServer + " or listening for a connection");
             System.out.println(e.getMessage());
 		}
 	}
-
+	
+	public void connectClient() {
+		try {
+			this.socketAsAClient = new Socket(this.hostName,this.portNumberAsAClient);
+			this.outToServer = new PrintWriter(this.socketAsAClient.getOutputStream(), true);
+			this.inFromServer = new BufferedReader(new InputStreamReader(this.socketAsAClient.getInputStream()));
+		} catch (IOException e) {
+            System.out.println("Exception caught when trying to listen on port "
+                    + this.portNumberAsAClient + "or" + this.portNumberAsAServer + " or listening for a connection");
+            System.out.println(e.getMessage());
+		}
+	}
 	
 	public boolean getResponseFromServer() throws IOException {
 		return (this.fromServer = this.inFromServer.readLine()) != null;
@@ -73,11 +91,13 @@ public class BrokerProxy {
 	public void setTheOutputToClient(JSONObject output) {
 		this.outToClient.println(output);
 	}
-	public String getInputValueFromServer() throws IOException {
-		return this.fromServer = this.inFromServer.readLine();
+	public String[][] getInputValueFromServer() throws IOException {
+		this.fromServer = this.inFromServer.readLine();
+		return getDataFromServer();
 	}
-	public String getInputValueFromClient() throws IOException {
-		return this.fromClient = this.inFromClient.readLine();
+	public String[][] getInputValueFromClient() throws IOException {
+		this.fromClient = this.inFromClient.readLine();
+		return getDataFromClient();
 	}
 	
 	@SuppressWarnings("unchecked")

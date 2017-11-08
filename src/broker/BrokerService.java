@@ -13,14 +13,19 @@ public class BrokerService {
         }
 
 		BrokerProxy generalProxy = new BrokerProxy(args[0],Integer.parseInt(args[1]),Integer.parseInt(args[2]));
-		generalProxy.connect();
-		BrokerProtocol clientProtocol = new BrokerProtocol(generalProxy);
+		BrokerProtocol protocol = new BrokerProtocol(generalProxy);
+		
+		generalProxy.connectServer();
+		protocol.registerServices(generalProxy.getInputValueFromServer());
+		
+		generalProxy.connectClient();
+		protocol.registerClients(generalProxy.getInputValueFromClient());
 		
 		while(generalProxy.getResponseFromClient()) {
-			
+				
 		}
 		
-		generalProxy.setTheOutputToServer(clientProtocol.processInput(null));
+		generalProxy.setTheOutputToServer(protocol.processInput(null));
 		
 //		BrokerProxy serverProxy = new BrokerProxy(Integer.parseInt(args[2]));
 //		serverProxy.connect();

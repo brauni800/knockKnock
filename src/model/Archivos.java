@@ -17,6 +17,24 @@ public class Archivos {
 		this.ruta = ruta + ".txt";
 	}
 
+	public void insertarServicio(String servicio) {
+		try {
+			File archivo = new File(ruta);
+	        BufferedWriter bw;
+	        if(archivo.exists()) {
+	            bw = new BufferedWriter(new FileWriter(archivo, true));
+	            bw.newLine();
+	            bw.write(servicio);
+	        } else {
+	            bw = new BufferedWriter(new FileWriter(archivo));
+	            bw.write(servicio);
+	        }
+	        bw.close();
+		} catch (IOException e) {
+			e.getStackTrace();
+		}
+	}
+	
 	public void insertarFecha() {
 		try {
 			File archivo = new File(ruta);

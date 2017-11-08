@@ -39,10 +39,20 @@ public class BrokerProtocol {
 		}
 		return theOutput;
 	}
-	public void registerServices(String services) {
-		
+
+	public void registerServices(String[][] services) {
+		for (int i = 0; i < services.length; i++) {
+			if (services[i][0].equals("SERVICIO")) {
+				new Archivos("Servicios").insertarServicio(services[i][1]);
+			}
+		}
 	}
-	public void registerClients(String clients) {
-		
+	
+	public void registerClients(String[][] clients) {
+		for (int i = 0; i < clients.length; i++) {
+			if (clients[i][0].equals("REGISTRAR")) {
+				new Archivos("Clientes").insertarServicio(clients[i][1]);
+			}
+		}
 	}
 }
