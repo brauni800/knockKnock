@@ -17,7 +17,7 @@ public class Archivos {
 		this.ruta = ruta + ".txt";
 	}
 
-	public void insertarServicio(String servicio) {
+	public void insertarLinea(String servicio) {
 		try {
 			File archivo = new File(ruta);
 	        BufferedWriter bw;

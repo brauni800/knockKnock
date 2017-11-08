@@ -55,22 +55,23 @@ public class BrokerProxy {
 	
 	public void connectServer() {
 		try {
-			this.clientsSocket = new ServerSocket(this.portNumberAsAServer);
-			this.socketAsAServer = this.clientsSocket.accept();
-			this.outToClient = new PrintWriter(this.socketAsAServer.getOutputStream(), true);
-			this.inFromClient = new BufferedReader(new InputStreamReader(this.socketAsAServer.getInputStream()));
+			this.socketAsAClient = new Socket(this.hostName,this.portNumberAsAClient);
+			this.outToServer = new PrintWriter(this.socketAsAClient.getOutputStream(), true);
+			this.inFromServer = new BufferedReader(new InputStreamReader(this.socketAsAClient.getInputStream()));
 		} catch (IOException e) {
             System.out.println("Exception caught when trying to listen on port "
                     + this.portNumberAsAClient + "or" + this.portNumberAsAServer + " or listening for a connection");
             System.out.println(e.getMessage());
 		}
+		
 	}
 	
 	public void connectClient() {
 		try {
-			this.socketAsAClient = new Socket(this.hostName,this.portNumberAsAClient);
-			this.outToServer = new PrintWriter(this.socketAsAClient.getOutputStream(), true);
-			this.inFromServer = new BufferedReader(new InputStreamReader(this.socketAsAClient.getInputStream()));
+			this.clientsSocket = new ServerSocket(this.portNumberAsAServer);
+			this.socketAsAServer = this.clientsSocket.accept();
+			this.outToClient = new PrintWriter(this.socketAsAServer.getOutputStream(), true);
+			this.inFromClient = new BufferedReader(new InputStreamReader(this.socketAsAServer.getInputStream()));
 		} catch (IOException e) {
             System.out.println("Exception caught when trying to listen on port "
                     + this.portNumberAsAClient + "or" + this.portNumberAsAServer + " or listening for a connection");

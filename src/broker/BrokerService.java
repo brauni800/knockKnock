@@ -8,7 +8,7 @@ public class BrokerService {
 
 	public static void main(String[] args) throws IOException {
 		if (args.length != 3) {
-            System.err.println("Usage: java BrokerServer <client port number> <server port number>");
+            System.err.println("Usage: java BrokerServer <hostname from server> <client port number> <server port number>");
             System.exit(1);
         }
 
@@ -22,7 +22,7 @@ public class BrokerService {
 		protocol.registerClients(generalProxy.getInputValueFromClient());
 		
 		while(generalProxy.getResponseFromClient()) {
-				
+			
 		}
 		
 		generalProxy.setTheOutputToServer(protocol.processInput(null));

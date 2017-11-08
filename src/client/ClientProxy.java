@@ -13,6 +13,9 @@ public class ClientProxy {
 
 	public static final String REGISTRAR = "REGISTRAR";
 	public static final String VOTAR = "VOTAR";
+	private static final String SERVICIO = "SERVICIO";
+	private static final String CLIENTE = "CLIENTE";
+	private static final String IP = "IP";
 	
 	private String hostName, fromServer;
 	private int portNumber;
@@ -47,16 +50,15 @@ public class ClientProxy {
 	@SuppressWarnings("unchecked")
 	public void register(String ip) {
 		this.json = new JSONObject();
-		this.json.put("SERVICIO", ClientProxy.REGISTRAR);
-		this.json.put("IP", ip);
+		this.json.put(ClientProxy.REGISTRAR, ip);
         this.out.println(this.json);
 	}
 
 	@SuppressWarnings("unchecked")
 	public void vote(String voto, String ip) {
 		this.json = new JSONObject();
-		this.json.put("SERVICIO", ClientProxy.VOTAR);
-		this.json.put("IP", ip);
+		this.json.put(ClientProxy.SERVICIO, ClientProxy.VOTAR);
+		this.json.put(ClientProxy.IP, ip);
 		this.json.put("VOTO", voto);
         this.out.println(this.json);
 	}

@@ -16,6 +16,8 @@ public class ServerProxy {
 
 	public static final String VOTAR = "VOTAR";
 	private static final String BUTTONS = "buttons";
+	private static final String SERVICIO = "SERVICIO";
+	private static final String REGISTRAR = "REGISTRAR";
 	
 	private String fromServer;
 	private int portNumber;
@@ -53,7 +55,7 @@ public class ServerProxy {
 
 	@SuppressWarnings("unchecked")
 	public void generateJSON() {
-		String[] buttonNames = new Archivos(BUTTONS).getButtonsNames();
+		String[] buttonNames = new Archivos(ServerProxy.BUTTONS).getButtonsNames();
 		this.json = new JSONObject();
 		for (int i = 0; i < buttonNames.length; i++) {
 			int numVotos = (int) new Archivos(buttonNames[i]).contarLineas();
@@ -68,7 +70,7 @@ public class ServerProxy {
 	@SuppressWarnings("unchecked")
 	public void sendServices() {
 		this.json = new JSONObject();
-		this.json.put("SERVICIO", ClientProxy.VOTAR);
+		this.json.put(ServerProxy.SERVICIO, ServerProxy.VOTAR);
         this.out.println(this.json);
 	}
 	
