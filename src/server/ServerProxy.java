@@ -9,7 +9,6 @@ import java.net.Socket;
 
 import org.json.simple.JSONObject;
 
-import client.ClientProxy;
 import model.Archivos;
 
 public class ServerProxy {
@@ -17,7 +16,6 @@ public class ServerProxy {
 	public static final String VOTAR = "VOTAR";
 	private static final String BUTTONS = "buttons";
 	private static final String SERVICIO = "SERVICIO";
-	private static final String REGISTRAR = "REGISTRAR";
 	
 	private String fromServer;
 	private int portNumber;

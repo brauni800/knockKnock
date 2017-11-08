@@ -14,7 +14,6 @@ public class ClientProxy {
 	public static final String REGISTRAR = "REGISTRAR";
 	public static final String VOTAR = "VOTAR";
 	private static final String SERVICIO = "SERVICIO";
-	private static final String CLIENTE = "CLIENTE";
 	private static final String IP = "IP";
 	
 	private String hostName, fromServer;
