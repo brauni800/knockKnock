@@ -10,12 +10,15 @@ import java.net.Socket;
 import org.json.simple.JSONObject;
 
 import model.Archivos;
+import model.Service;
 
 public class ServerProxy {
 
 	public static final String VOTAR = "VOTAR";
 	private static final String BUTTONS = "buttons";
 	private static final String SERVICIO = "SERVICIO";
+	private static final String RESULTADO = "RESULTADO";
+	private static final String VOTO = "VOTO";
 	
 	private String fromServer;
 	private int portNumber;
@@ -29,18 +32,26 @@ public class ServerProxy {
 		this.portNumber = portNumber;
 	}
 
-	public String[][] getDataFromServer() {
-		String[] dataJSON = this.fromServer.split(","), peersDataJSON = null, correctPeers = null;
-		String[][] result = new String[dataJSON.length][2];
+	public Service getDataFromServer() {
+		String[] dataJSON = this.fromServer.split(","), peersDataJSON = null, key = null, value = null;
+		Service service = new Service();
+		int numOfServices = 0;
 		
 		for (int i = 0; i < dataJSON.length; i++) {
 			peersDataJSON = dataJSON[i].split(":"); 
-			for (int j = 0; j < peersDataJSON.length; j++) {
-				correctPeers = peersDataJSON[j].split("\"");
-				result[i][j] = correctPeers[1];
+			key = peersDataJSON[0].split("\"");
+			value = peersDataJSON[1].split("\"");
+			switch(key[1]) {
+			case SERVICIO:
+				service.setService(value[1], numOfServices);
+				numOfServices ++;
+				break;
+			case VOTO:
+				service.setVote(value[1]);
+				break;
 			}
 		}
-		return result;
+		return service;
 	}
 
 	public boolean getResponseFromServer() throws IOException {
@@ -53,8 +64,9 @@ public class ServerProxy {
 
 	@SuppressWarnings("unchecked")
 	public void generateJSON() {
-		String[] buttonNames = new Archivos(ServerProxy.BUTTONS).getButtonsNames();
+		String[] buttonNames = new Archivos(BUTTONS).getButtonsNames();
 		this.json = new JSONObject();
+		this.json.put(SERVICIO, RESULTADO);
 		for (int i = 0; i < buttonNames.length; i++) {
 			int numVotos = (int) new Archivos(buttonNames[i]).contarLineas();
 			this.json.put(buttonNames[i], numVotos);
@@ -68,7 +80,7 @@ public class ServerProxy {
 	@SuppressWarnings("unchecked")
 	public void sendServices() {
 		this.json = new JSONObject();
-		this.json.put(ServerProxy.SERVICIO, ServerProxy.VOTAR);
+		this.json.put(SERVICIO, VOTAR);
         this.out.println(this.json);
 	}
 	
