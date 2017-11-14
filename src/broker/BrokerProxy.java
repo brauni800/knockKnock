@@ -9,8 +9,12 @@ import java.net.Socket;
 
 import org.json.simple.JSONObject;
 
+import model.Service;
+
 public class BrokerProxy {
 
+	private static final String SERVICIO = "SERVICIO";
+	
 	private String fromClient,fromServer,hostName;
 	private int portNumberAsAClient,portNumberAsAServer;
 	private ServerSocket clientsSocket;
@@ -25,32 +29,45 @@ public class BrokerProxy {
 		this.hostName = hostName;
 	}
 	
-	public String[][] getDataFromServer() {
-		String[] dataJSON = this.fromServer.split(","), peersDataJSON = null, correctPeers = null;
-		String[][] result = new String[dataJSON.length][2];
+	public Service getDataFromServer() {
+		String[] dataJSON = this.fromServer.split(","), peersDataJSON = null, key = null, value = null;
+		Service service = new Service();
+		int numOfServices = 0;
 		
 		for (int i = 0; i < dataJSON.length; i++) {
 			peersDataJSON = dataJSON[i].split(":"); 
-			for (int j = 0; j < peersDataJSON.length; j++) {
-				correctPeers = peersDataJSON[j].split("\"");
-				result[i][j] = correctPeers[1];
+			key = peersDataJSON[0].split("\"");
+			value = peersDataJSON[1].split("\"");
+			switch(key[1]) {
+			case SERVICIO:
+				service.setService(value[1], numOfServices);
+				numOfServices ++;
+				break;
 			}
 		}
-		return result;
+		return service;
 	}
 	
-	public String[][] getDataFromClient() {
-		String[] dataJSON = this.fromClient.split(","), peersDataJSON = null, correctPeers = null;
-		String[][] result = new String[dataJSON.length][2];
+	public Service getDataFromClient() {
+		String[] dataJSON = this.fromClient.split(","), peersDataJSON = null, key = null, value = null;
+		Service service = new Service();
+		int numOfServices = 0;
 		
 		for (int i = 0; i < dataJSON.length; i++) {
 			peersDataJSON = dataJSON[i].split(":"); 
-			for (int j = 0; j < peersDataJSON.length; j++) {
-				correctPeers = peersDataJSON[j].split("\"");
-				result[i][j] = correctPeers[1];
+			key = peersDataJSON[0].split("\"");
+			value = peersDataJSON[1].split("\"");
+			switch(key[1]) {
+			case SERVICIO:
+				service.setService(value[1], numOfServices);
+				numOfServices ++;
+				break;
+			default:
+				service.addResult(key[1], value[1]);
+				break;
 			}
 		}
-		return result;
+		return service;
 	}
 	
 	public void connectServer() {
@@ -92,11 +109,11 @@ public class BrokerProxy {
 	public void setTheOutputToClient(JSONObject output) {
 		this.outToClient.println(output);
 	}
-	public String[][] getInputValueFromServer() throws IOException {
+	public Service getInputValueFromServer() throws IOException {
 		this.fromServer = this.inFromServer.readLine();
 		return getDataFromServer();
 	}
-	public String[][] getInputValueFromClient() throws IOException {
+	public Service getInputValueFromClient() throws IOException {
 		this.fromClient = this.inFromClient.readLine();
 		return getDataFromClient();
 	}

@@ -1,11 +1,15 @@
 package model;
 
+import java.util.ArrayList;
+
 public class Service {
 
 	private String ip, vote;
 	private String[] services;
+	private ArrayList<Result> results;
 	
 	public Service() {
+		
 	}
 
 	public String getIp() {
@@ -34,5 +38,9 @@ public class Service {
 	
 	public int numberOfServices() {
 		return this.services.length;
+	}
+
+	public void addResult(String key, String value) {
+		results.add(new Result(key, value));
 	}
 }

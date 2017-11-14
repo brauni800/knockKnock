@@ -9,6 +9,8 @@ import java.net.UnknownHostException;
 
 import org.json.simple.JSONObject;
 
+import model.Service;
+
 public class ClientProxy {
 
 	public static final String REGISTRAR = "REGISTRAR";
@@ -29,18 +31,26 @@ public class ClientProxy {
 		this.portNumber = portNumber;
 	}
 	
-	public String[][] getDataFromServer() {
-		String[] dataJSON = this.fromServer.split(","), peersDataJSON = null, correctPeers = null;
-		String[][] result = new String[dataJSON.length][2];
+	public Service getDataFromServer() {
+		String[] dataJSON = this.fromServer.split(","), peersDataJSON = null, key = null, value = null;
+		Service service = new Service();
+		int numOfServices = 0;
 		
 		for (int i = 0; i < dataJSON.length; i++) {
 			peersDataJSON = dataJSON[i].split(":"); 
-			for (int j = 0; j < peersDataJSON.length; j++) {
-				correctPeers = peersDataJSON[j].split("\"");
-				result[i][j] = correctPeers[1];
+			key = peersDataJSON[0].split("\"");
+			value = peersDataJSON[1].split("\"");
+			switch(key[1]) {
+			case SERVICIO:
+				service.setService(value[1], numOfServices);
+				numOfServices ++;
+				break;
+			default:
+				service.addResult(key[1], value[1]);
+				break;
 			}
 		}
-		return result;
+		return service;
 	}
 
 	public boolean getResponseFromServer() throws IOException {

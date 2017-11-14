@@ -3,6 +3,7 @@ package broker;
 import org.json.simple.JSONObject;
 
 import model.Archivos;
+import model.Service;
 
 public class BrokerProtocol {
 
@@ -40,15 +41,15 @@ public class BrokerProtocol {
 		return theOutput;
 	}
 
-	public void registerServices(String[][] services) {
-		for (int i = 0; i < services.length; i++) {
-			new Archivos("Servicios").insertarLinea(services[i][1]);
+	public void registerServices(Service services) {
+		for (int i = 0; i < services.numberOfServices(); i++) {
+			new Archivos("Servicios").insertarLinea(services.getService(i));
 		}
 	}
 	
-	public void registerClients(String[][] clients) {
-		for (int i = 0; i < clients.length; i++) {
-			new Archivos("Clientes").insertarLinea(clients[i][1]);
+	public void registerClients(Service clients) {
+		for (int i = 0; i < clients.numberOfServices(); i++) {
+			new Archivos("Clientes").insertarLinea(clients.getService(i));
 		}
 	}
 }
