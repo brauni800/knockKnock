@@ -43,4 +43,12 @@ public class Service {
 	public void addResult(String key, String value) {
 		results.add(new Result(key, value));
 	}
+	
+	public Result getResult(int index) {
+		return this.results.get(index);
+	}
+	
+	public int numberOfResults() {
+		return this.results.size();
+	}
 }

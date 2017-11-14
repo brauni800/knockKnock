@@ -14,6 +14,8 @@ import model.Service;
 public class BrokerProxy {
 
 	private static final String SERVICIO = "SERVICIO";
+	private static final String VOTO = "VOTO";
+	private static final String IP = "IP";
 	
 	private String fromClient,fromServer,hostName;
 	private int portNumberAsAClient,portNumberAsAServer;
@@ -21,7 +23,6 @@ public class BrokerProxy {
 	private Socket socketAsAClient,socketAsAServer;
 	private PrintWriter outToClient,outToServer;
 	private BufferedReader inFromClient,inFromServer;
-	private JSONObject json;
 	
 	public BrokerProxy(String hostName,int portNumberAsAServer, int portNumberASaClient) {
 		this.portNumberAsAClient = portNumberASaClient;
@@ -43,6 +44,9 @@ public class BrokerProxy {
 				service.setService(value[1], numOfServices);
 				numOfServices ++;
 				break;
+			default:
+				service.addResult(key[1], value[1]);
+				break;
 			}
 		}
 		return service;
@@ -62,8 +66,11 @@ public class BrokerProxy {
 				service.setService(value[1], numOfServices);
 				numOfServices ++;
 				break;
-			default:
-				service.addResult(key[1], value[1]);
+			case VOTO:
+				service.setVote(value[1]);
+				break;
+			case IP:
+				service.setIp(value[1]);
 				break;
 			}
 		}
@@ -106,9 +113,19 @@ public class BrokerProxy {
 	public void setTheOutputToServer(JSONObject output) {
 		this.outToServer.println(output);
 	}
+	
+	public void setTheOutputToServer(String output) {
+		this.outToServer.println(output);
+	}
+	
 	public void setTheOutputToClient(JSONObject output) {
 		this.outToClient.println(output);
 	}
+	
+	public void setTheOutputToClient(String output) {
+		this.outToClient.println(output);
+	}
+	
 	public Service getInputValueFromServer() throws IOException {
 		this.fromServer = this.inFromServer.readLine();
 		return getDataFromServer();
@@ -116,16 +133,5 @@ public class BrokerProxy {
 	public Service getInputValueFromClient() throws IOException {
 		this.fromClient = this.inFromClient.readLine();
 		return getDataFromClient();
-	}
-	
-	@SuppressWarnings("unchecked")
-	public JSONObject results(String[][] results) {
-		this.json = new JSONObject();
-		for (int i = 0; i < results.length; i++) {
-			for (int j = 0; j < results[i].length; j++) {
-				this.json.put(results[i][0], results[i][1]);
-			}
-		}
-		return this.json;
 	}
 }

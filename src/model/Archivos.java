@@ -80,4 +80,9 @@ public class Archivos {
 		}
 		return result;
 	}
+	
+	public boolean buscarElemento(String elemento) {
+		
+		return false;
+	}
 }
